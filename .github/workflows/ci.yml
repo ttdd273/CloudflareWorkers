@@ -2,7 +2,8 @@ name: CI and Deploy
 on:
   push:
     branches:
-      - "*"
+      # Single * only matches on a branch that doesn't contain /
+      - "**"
 
 # We want to run all tests if it's a push to main, but run tests for affected workers otherwise
 jobs:
