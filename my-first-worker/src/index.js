@@ -9,6 +9,7 @@
  */
 
 export default {
+	// Why no worky
 	async fetch(request, env, ctx) {
 		return new Response('Hello World!');
 	},
