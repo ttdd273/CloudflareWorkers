@@ -24,8 +24,9 @@ jobs:
         # | is YAML multi line block scalar syntax, preserving newlines within the string
         # Which is helpful for writing multiple commands
         run: |
-          # To check if it's a directory, it should end with a /
-          for dir in */; do
+          # Find all directories, but exclude . which is the root
+          dirs=$(find . -maxdepth 1 -type d)
+          for dir in $dirs; do
             echo "Testing worker: $dir"
             cd $dir
             npm install
