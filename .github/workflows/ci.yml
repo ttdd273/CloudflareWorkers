@@ -2,12 +2,14 @@ name: CI and Deploy
 on:
   push:
     branches:
-      - "feature/*"
-      - "main"
+      - "*"
+
+# We want to run all tests if it's a push to main, but run tests for affected workers otherwise
 jobs:
-  test: 
-    name: Run Unit Tests
+  test-all-workers: 
+    name: Test All Workers (Main Branch)
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
 
     steps:
       - name: Checkout Code
@@ -18,8 +20,16 @@ jobs:
         with:
           node-version: 18
 
-      - name: Install Dependencies
-        run: npm install
+      - name: Install and Run Tests for All Workers
+        # | is YAML multi line block scalar syntax, preserving newlines within the string
+        # Which is helpful for writing multiple commands
+        run: |
+          for dir in *; do
+            echo "Testing worker: $dir"
+            cd $dir
+            npm install
+            npm test
+          done
 
       - name: Run Tests
         run: npm test
