@@ -25,16 +25,14 @@ jobs:
         # Which is helpful for writing multiple commands
         run: |
           # Find all directories, but exclude . which is the root
-          dirs=$(find . -maxdepth 1 -type d)
+          dirs=$(find . -maxdepth 1 -type d -name '*worker*')
 
           for dir in $dirs; do
-            if [ "$dir" != "." ]; then
-              echo "Testing worker: $dir"
-              cd $dir
-              npm install
-              npm test
-              cd ..
-            fi
+            echo "Testing worker: $dir"
+            cd $dir
+            npm install
+            npm test
+            cd ..
           done
 
       - name: Run Tests
