@@ -30,6 +30,7 @@ jobs:
             cd $dir
             npm install
             npm test
+            cd ..
           done
 
       - name: Run Tests
