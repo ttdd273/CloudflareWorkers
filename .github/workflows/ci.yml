@@ -1,0 +1,30 @@
+name: CI and Deploy
+on:
+  push:
+    branches:
+      - "feature/*"
+  push:
+    branches:
+      - "main"
+jobs:
+  test: Run Unit Tests
+  runs-on: ubuntu-lastest
+  steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 18
+    - run: npm install
+    - run: npm test
+
+  # deploy:
+  #   runs-on: ubuntu-latest
+  #   timeout-minutes: 60
+  #   needs: test
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - name: Build & Deploy Worker
+  #       uses: cloudflare/wrangler-action@v3
+  #       with:
+  #         apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+  #         accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
