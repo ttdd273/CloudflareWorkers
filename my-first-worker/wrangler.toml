@@ -10,6 +10,15 @@ compatibility_flags = ["nodejs_compat"]
 [observability]
 enabled = true
 
+[env.us-stage-live]
+name = "first-worker-us-stage-live"
+vars = { MODE='live', ENVIRONMENT="stage"}
+
+[env.us-prod-live]
+name = "first-worker-us-prod-live"
+vars = { MODE='live', ENVIRONMENT="prod"}
+
+
 # Automatically place your workloads in an optimal location to minimize latency.
 # If you are running back-end logic in a Worker, running it closer to your back-end infrastructure
 # rather than the end user may result in better performance.
