@@ -46,8 +46,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Get Changed Files
-        run: | # Get a list of directories that have the word `worker` and have changed files
-          # We want to cut out the second part of the path because these the first arg is the repo folder
+        run: | # Get a list of directories that have the word `worker` and have changed files. We want to cut out the second part of the path because these the first arg is the repo folder
           dirs=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '/worker/' | cut -d '/' -f2 )
           echo "Changed directories: $dirs"
           echo "dirs=$dirs" >> $GITHUB_ENV
