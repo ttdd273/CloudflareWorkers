@@ -1,5 +1,8 @@
-name: CI and Deploy
+name: Unit Testing
 on:
+  pull_request:
+    branches:
+      - main
   push:
     branches:
       # Single * only matches on a branch that doesn't contain /
@@ -31,7 +34,7 @@ jobs:
           for dir in $dirs; do
             echo "Testing worker: $dir"
             cd $dir
-            npm install
+            npm ci
             npm test
             cd ..
           done
