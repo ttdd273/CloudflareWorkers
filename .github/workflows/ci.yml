@@ -10,7 +10,7 @@ jobs:
   test-all-workers: 
     name: Test All Workers (Main Branch)
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+    # if: github.ref == 'refs/heads/main'
 
     steps:
       - name: Checkout Code
@@ -36,33 +36,33 @@ jobs:
             cd ..
           done
     
-  test-affected-workers:
-    name: Test Only Affected Workers
-    runs-on: ubuntu-latest
-    if: github.ref != 'refs/heads/main'
+  # test-affected-workers:
+  #   name: Test Only Affected Workers
+  #   runs-on: ubuntu-latest
+  #   if: github.ref != 'refs/heads/main'
 
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
+  #   steps:
+  #     - name: Checkout Code
+  #       uses: actions/checkout@v3
 
-      - name: Get Changed Files
-        run: | # Get a list of directories that have the word `worker` and have changed files. We want to cut out the second part of the path because these the first arg is the repo folder
-          dirs=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '/worker/' | cut -d '/' -f2 )
-          echo "Changed directories: $dirs"
-          echo "dirs=$dirs" >> $GITHUB_ENV
+  #     - name: Get Changed Files
+  #       run: | # Get a list of directories that have the word `worker` and have changed files. We want to cut out the second part of the path because these the first arg is the repo folder
+  #         dirs=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '/worker/' | cut -d '/' -f2 )
+  #         echo "Changed directories: $dirs"
+  #         echo "dirs=$dirs" >> $GITHUB_ENV
 
-      - name: Run Tests for Affected Workers 
-        run: | 
-          if [ -z "${{ env.dirs }}" ]; then
-            echo "No affected workers. Skipping tests."
-          else
-            for dir in ${{ env.dirs }}; do
-              echo "Test worker: $dir"
-              cd $dir
-              npm install
-              npm test
-              cd .. 
-            done
+  #     - name: Run Tests for Affected Workers 
+  #       run: | 
+  #         if [ -z "${{ env.dirs }}" ]; then
+  #           echo "No affected workers. Skipping tests."
+  #         else
+  #           for dir in ${{ env.dirs }}; do
+  #             echo "Test worker: $dir"
+  #             cd $dir
+  #             npm install
+  #             npm test
+  #             cd .. 
+  #           done
 
 
   # deploy:
