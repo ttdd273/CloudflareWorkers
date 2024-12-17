@@ -4,13 +4,13 @@ import subprocess
 import time
 
 # Set variables
-SCRIPT_NAME = "first-worker-tong"
+WORKER_NAME = "first-worker-tong"
 ACCOUNT_ID = "ce4d5664815cbd558429d45bfaac44d2"
 CLOUDFLARE_EMAIL = "tong.duan@affirm.com"
 CLOUDFLARE_API_KEY = "xtP2Gs0X6IT9X3qhW2Plh8hgYSEPcXwU-8hKkuYu"
 
 # Curl equivalent in Python using requests to get all the versions of a worker
-url = f"https://api.cloudflare.com/client/v4/accounts/{ACCOUNT_ID}/workers/scripts/{SCRIPT_NAME}/versions"
+url = f"https://api.cloudflare.com/client/v4/accounts/{ACCOUNT_ID}/workers/scripts/{WORKER_NAME}/versions"
 headers = {
     "Authorization": f"Bearer {CLOUDFLARE_API_KEY}",
     "Content-Type": "application/json"
