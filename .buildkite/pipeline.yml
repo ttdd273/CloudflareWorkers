@@ -1,6 +1,6 @@
 steps:
   - label: ":pipeline: Pipeline upload"
-    command: buildkite-agent pipeline upload .buildkite/pipeline.yml
+    command: buildkite-agent pipeline upload
 
   - blocked: "Enter Worker Name"
     blocked_state: running
