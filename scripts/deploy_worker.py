@@ -15,11 +15,10 @@ def initialize_globals():
 
     WORKER_NAME = input("Please enter the worker name: ")
 
-    BASE_URL = f"https://api.cloudflare.com/client/v4/accounts/{
-        ACCOUNT_ID}/workers/scripts/{WORKER_NAME}"
+    BASE_URL = f"https://api.cloudflare.com/client/v4/accounts/{ACCOUNT_ID}/workers/scripts/{WORKER_NAME}"
     HEADERS = {
         "Authorization": f"Bearer {CLOUDFLARE_API_KEY}",
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
     }
 
 
@@ -30,18 +29,13 @@ def publish_worker(script_path):
         with open(script_path, "r") as script_file:
             script_content = script_file.read()
 
-        response = requests.put(
-            BASE_URL,
-            headers=HEADERS,
-            data=script_content
-        )
+        response = requests.put(BASE_URL, headers=HEADERS, data=script_content)
 
         if response.status_code == 200:
             print(f"Worker '{WORKER_NAME}' deployed successfully.")
-            return response.json()['result']['id']
+            return response.json()["result"]["id"]
         else:
-            print(f"Failed to deploy worker: {
-                  response.status_code} {response.text}")
+            print(f"Failed to deploy worker: {response.status_code} {response.text}")
         return None
     except Exception as e:
         print(f"Error uploading worker: {e}")
@@ -51,7 +45,7 @@ def get_old_worker_versions():
     """
     Returns the old_version_id of a worker if it been changed, which would be 2nd most recent version.
 
-    If there's less than 2 versions, the worker is either completely new, or a new version needs to be published. 
+    If there's less than 2 versions, the worker is either completely new, or a new version needs to be published.
     """
     # Curl equivalent in Python using requests to get all the versions of a worker
     url = f"{BASE_URL}/versions"
@@ -75,25 +69,26 @@ def get_old_worker_versions():
             # print("This is the first deploy, come up with a diff workflow")
             return None
     else:
-        print(f"Version fetch failed. Status code: {
-              response.status_code}, Response: {response.text}")
+        print(
+            f"Version fetch failed. Status code: {response.status_code}, Response: {response.text}"
+        )
 
 
 def gradual_deploy(new_ver_id, new_ver_perc, old_ver_id, old_ver_perc):
-    command = ["npx",
-               "wrangler",
-               "versions",
-               "deploy",
-               f"{new_ver_id}@{new_ver_perc}%",
-               f"{old_ver_id}@{old_ver_perc}%",
-               "-y"
-               ]
+    command = [
+        "npx",
+        "wrangler",
+        "versions",
+        "deploy",
+        f"{new_ver_id}@{new_ver_perc}%",
+        f"{old_ver_id}@{old_ver_perc}%",
+        "-y",
+    ]
 
     # Run the subprocess for this
     result = subprocess.run(command, capture_output=True, text=True)
     if result.returncode == 0:
-        print(f"Succesfully deploy new version ({
-              new_ver_id}) to {new_ver_perc}%")
+        print(f"Succesfully deploy new version ({new_ver_id}) to {new_ver_perc}%")
     else:
         print(f"Deployment failed: {result}")
 
@@ -101,9 +96,9 @@ def gradual_deploy(new_ver_id, new_ver_perc, old_ver_id, old_ver_perc):
 def prompt_for_approval(msg):
     """Prompts the user for a y/n answer."""
     user_input = input(msg)
-    while user_input.lower() not in ['y', 'n']:
+    while user_input.lower() not in ["y", "n"]:
         user_input = input("Answer must be (y/n): ")
-    if user_input == 'y':
+    if user_input == "y":
         return True
     return False
 
@@ -113,13 +108,14 @@ def canary_ramp(new_version_id, old_version_id):
 
     for ramp_perc in ramp_up_values:
         try:
-            gradual_deploy(new_version_id, ramp_perc,
-                           old_version_id, 100-ramp_perc)
+            gradual_deploy(new_version_id, ramp_perc, old_version_id, 100 - ramp_perc)
         except Exception as error:
             print(f"Exception occurred when deploying: {error}")
 
         if ramp_perc != 100:
-            if prompt_for_approval(f"Deployed to {ramp_perc}%. Do you approve to proceed? (y/n):"):
+            if prompt_for_approval(
+                f"Deployed to {ramp_perc}%. Do you approve to proceed? (y/n):"
+            ):
                 continue
             else:
                 # We need to abort the workflow
@@ -128,21 +124,16 @@ def canary_ramp(new_version_id, old_version_id):
 
 
 def full_ramp(new_version_id):
-    payload = {
-        "new_version_id": new_version_id,
-        "enabled": True
-    }
+    payload = {"new_version_id": new_version_id, "enabled": True}
 
     try:
         # Send PUT request to deploy traffic
-        response = requests.put(
-            f'{BASE_URL}/traffic', headers=HEADERS, json=payload)
+        response = requests.put(f"{BASE_URL}/traffic", headers=HEADERS, json=payload)
 
         if response.status_code == 200:
             print(f"All traffic routed to the new version: {new_version_id}")
         else:
-            print(f"Failed to route traffic: {
-                  response.status_code} {response.text}")
+            print(f"Failed to route traffic: {response.status_code} {response.text}")
             # response.raise_for_status()
     except Exception as e:
         print(f"An error occurred while deploying traffic: {e}")
@@ -155,7 +146,7 @@ if __name__ == "main":
     # After publishing, we can get worker versions
     # If it's < 2 versions, we can just ramp to 100 right away, 'cause it's new
     # If it >= 2 versions, then we need to canary ramp
-    new_version_id = publish_worker(f'{WORKER_NAME}/src/index.js')
+    new_version_id = publish_worker(f"{WORKER_NAME}/src/index.js")
 
     old_version_id = get_old_worker_versions()
     if not old_version_id and new_version_id:
@@ -163,4 +154,4 @@ if __name__ == "main":
     elif old_version_id and new_version_id:
         canary_ramp(new_version_id, old_version_id)
     else:
-        print(f'Something went wrong with finding old and new version IDs')
+        print(f"Something went wrong with finding old and new version IDs")
