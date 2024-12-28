@@ -1,0 +1,15 @@
+steps:
+  - blocked: "Enter Worker Name"
+    blocked_state: running
+    fields:
+      - label: "Worker Name"
+        key: "WORKER_NAME"
+        type: "text"
+        required: true
+        placeholder: "Enter the name of the worker"
+    
+  # - label: ":python: Get Worker Version IDs"
+  #   command: |
+  #     python3 scripts/get_versions.py
+  #   env:
+  #     WORKER_NAME: "${WORKER_NAME}"  # Pass worker name from the field
