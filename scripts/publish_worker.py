@@ -32,4 +32,4 @@ def publish_worker(script_path):
         exit(1)
 
 if __name__ == "__main__":
-    publish_worker(f"{WORKER_NAME}/src/index.js")
+    publish_worker(f"{WORKER_NAME}/src/index.mjs")
