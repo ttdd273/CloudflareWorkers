@@ -20,7 +20,9 @@ def publish_worker():
         "npx",
         "wrangler",
         "versions",
-        "upload"
+        "upload",
+        "--config",
+        f"{WORKER_NAME}/wrangler.toml"
     ]
 
     # Run the subprocess for this
