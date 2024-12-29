@@ -19,8 +19,7 @@ def publish_worker():
     command = [
         "npx",
         "wrangler",
-        "versions",
-        "upload",
+        "deploy",
         "--config",
         f"{WORKER_NAME}/wrangler.toml"
     ]
