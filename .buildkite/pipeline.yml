@@ -9,9 +9,6 @@ steps:
 
   - label: "Publish Worker"
     command: |
-      set -x
-      chmod +x scripts/publish_worker.py
-      ls -l scripts
       python3 scripts/publish_worker.py
 
     
