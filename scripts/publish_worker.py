@@ -1,16 +1,5 @@
-#!/usr/bin/env python3
-
-import os
 import subprocess
-
-ACCOUNT_ID = os.getenv("CLOUDFLARE_ACCOUNT_ID")
-CLOUDFLARE_API_KEY = os.getenv("CLOUDFLARE_API_TOKEN")
-WORKER_NAME = os.getenv("WORKER_NAME")
-BASE_URL = f"https://api.cloudflare.com/client/v4/accounts/{ACCOUNT_ID}/workers/scripts/{WORKER_NAME}"
-HEADERS = {
-    "Authorization": f"Bearer {CLOUDFLARE_API_KEY}",
-    "Content-Type": "application/javascript",
-}
+from scripts.init_globals import *
 
 def publish_worker():
     """Publish the worker script to Cloudflare."""

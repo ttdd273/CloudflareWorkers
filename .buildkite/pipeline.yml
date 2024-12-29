@@ -8,14 +8,28 @@ steps:
         hint: "Enter the name of the worker"
 
   - label: "Publish Worker"
+    key: "publish-worker"
     command: |
       export WORKER_NAME=$(buildkite-agent meta-data get WORKER_NAME)
       export CLOUDFLARE_API_TOKEN=$(buildkite-agent secret get CLOUDFLARE_API_TOKEN)
       export CLOUDFLARE_ACCOUNT_ID=$(buildkite-agent secret get CLOUDFLARE_ACCOUNT_ID)
 
       python3 scripts/publish_worker.py
-    
-  - label: ":python: Get Worker Version IDs"
+
+  - label: ":script: Check Old Worker Version"
+    key: "check-old-version"
+    # -n checks if something is nonempty
     command: |
-      python3 scripts/get_versions.py
+      read OLD_VERSION_ID NEW_VERSION_ID < <(python3 scripts/get_versions.py)
+      buildkite-agent meta-data set "OLD_VERSION_ID" "$OLD_VERSION_ID"
+      buildkite-agent meta-data set "NEW_VERSION_ID" "$NEW_VERSION_ID"
+    
+  - label: ":python: Canary Ramp Version IDs"
+    command: |
+      python3 scripts/canary_ramp.py
+      
+
+
+
+  
       

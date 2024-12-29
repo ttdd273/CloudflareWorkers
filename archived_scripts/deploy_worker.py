@@ -12,14 +12,8 @@ def initialize_globals():
     # The account ID and the Cloudflare API key needs to be a secret of some sort
     ACCOUNT_ID = os.getenv("CLOUDFLARE_ACCOUNT_ID")
     CLOUDFLARE_API_KEY = os.getenv("CLOUDFLARE_API_TOKEN")
-
     WORKER_NAME = input("Please enter the worker name: ")
-
     BASE_URL = f"https://api.cloudflare.com/client/v4/accounts/{ACCOUNT_ID}/workers/scripts/{WORKER_NAME}"
-    HEADERS = {
-        "Authorization": f"Bearer {CLOUDFLARE_API_KEY}",
-        "Content-Type": "application/json",
-    }
 
 
 def publish_worker(script_path):
