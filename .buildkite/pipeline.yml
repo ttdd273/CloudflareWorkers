@@ -9,7 +9,7 @@ steps:
 
   - label: "Publish Worker"
     command: |
-      python scripts/publish_worker.py
+      python3 scripts/publish_worker.py
 
     
   # - label: ":python: Get Worker Version IDs"
