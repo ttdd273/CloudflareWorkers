@@ -31,7 +31,7 @@ steps:
   
   - group: ":lock_with_ink_pen: Canary Ramp"
     # We skip this if there's no old versions
-    if: build.meta_data["OLD_VERSION_ID"] != ""
+    if: build.meta_data("OLD_VERSION_ID") != ""
     key: "canary-ramp"
     steps:
       - label: ":python: Canary Ramp 1%"
