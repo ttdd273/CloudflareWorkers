@@ -9,7 +9,7 @@ WORKER_NAME = os.getenv("WORKER_NAME")
 BASE_URL = f"https://api.cloudflare.com/client/v4/accounts/{ACCOUNT_ID}/workers/scripts/{WORKER_NAME}"
 HEADERS = {
     "Authorization": f"Bearer {CLOUDFLARE_API_KEY}",
-    "Content-Type": "application/json",
+    "Content-Type": "application/javascript",
 }
 
 def publish_worker(script_path):
