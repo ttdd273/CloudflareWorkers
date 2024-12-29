@@ -1,4 +1,9 @@
 steps:
+  - label: "Get Secrets"
+    command:
+      - export CLOUDFLARE_API_TOKEN=$(buildkite-agent secret get CLOUDFLARE_API_TOKEN)
+      - export CLOUDFLARE_ACCOUNT_ID=$(buildkite-agent secret get CLOUDFLARE_ACCOUNT_ID)
+
   - block: "Enter Worker Name"
     blocked_state: running
     fields:
@@ -9,6 +14,7 @@ steps:
 
   - label: "Publish Worker"
     command: |
+      export WORKER_NAME=${WORKER_NAME}
       python3 scripts/publish_worker.py
 
     
