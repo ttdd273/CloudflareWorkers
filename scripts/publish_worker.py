@@ -33,5 +33,5 @@ def publish_worker(script_path):
     except Exception as e:
         print(f"Error uploading worker: {e}")
 
-if __name__ == "main":
+if __name__ == "__main__":
     publish_worker(f"{WORKER_NAME}/scr/index.js")
