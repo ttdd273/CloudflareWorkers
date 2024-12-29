@@ -15,9 +15,6 @@ HEADERS = {
 def publish_worker(script_path):
     """Publish the worker script to Cloudflare."""
     # We need to figure out how to get the script path
-    print(f"Clloudflare id {ACCOUNT_ID}")
-    print(f"Worker name {WORKER_NAME}")
-
     try:
         with open(script_path, "r") as script_file:
             script_content = script_file.read()
@@ -35,4 +32,4 @@ def publish_worker(script_path):
         exit(1)
 
 if __name__ == "__main__":
-    publish_worker(f"{WORKER_NAME}/scr/index.js")
+    publish_worker(f"{WORKER_NAME}/src/index.js")
