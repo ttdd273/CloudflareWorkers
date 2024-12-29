@@ -1,15 +1,16 @@
 steps:
-  - label: ":pipeline: Pipeline upload"
-    command: buildkite-agent pipeline upload
-
-  - blocked: "Enter Worker Name"
+  - block: "Enter Worker Name"
     blocked_state: running
     fields:
-      - label: "Worker Name"
+      - text: "Worker Name"
         key: "WORKER_NAME"
-        type: "text"
         required: true
-        placeholder: "Enter the name of the worker"
+        hint: "Enter the name of the worker"
+
+  - label: "Publish Worker"
+    command: |
+      python3 scripts/get_versions.py
+
     
   # - label: ":python: Get Worker Version IDs"
   #   command: |
