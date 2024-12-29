@@ -27,11 +27,12 @@ def publish_worker(script_path):
         if response.status_code == 200:
             print(f"Worker '{WORKER_NAME}' deployed successfully.")
             return response.json()["result"]["id"]
-        else:
-            print(f"Failed to deploy worker: {response.status_code} {response.text}")
-        return None
+        print(f"Failed to deploy worker: {response.status_code} {response.text}")
+        exit(1)
+
     except Exception as e:
         print(f"Error uploading worker: {e}")
+        exit(1)
 
 if __name__ == "__main__":
     publish_worker(f"{WORKER_NAME}/scr/index.js")
