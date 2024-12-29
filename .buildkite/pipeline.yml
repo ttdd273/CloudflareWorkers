@@ -7,6 +7,11 @@ steps:
         required: true
         hint: "Enter the name of the worker"
 
+  - label: "Initialize Global Variables"
+    key: "initialize-globals"
+    command: |
+      python3 -m scripts.init_globals.py
+
   - label: "Publish Worker"
     key: "publish-worker"
     command: |
@@ -14,22 +19,69 @@ steps:
       export CLOUDFLARE_API_TOKEN=$(buildkite-agent secret get CLOUDFLARE_API_TOKEN)
       export CLOUDFLARE_ACCOUNT_ID=$(buildkite-agent secret get CLOUDFLARE_ACCOUNT_ID)
 
-      python3 scripts/publish_worker.py
+      python3 -m scripts.publish_worker.py
 
-  - label: ":script: Check Old Worker Version"
-    key: "check-old-version"
+  - label: ":script: Get Worker Versions"
+    key: "get-versions"
     # -n checks if something is nonempty
     command: |
-      read OLD_VERSION_ID NEW_VERSION_ID < <(python3 scripts/get_versions.py)
+      read OLD_VERSION_ID NEW_VERSION_ID < <(python3 -m scripts.get_versions.py)
       buildkite-agent meta-data set "OLD_VERSION_ID" "$OLD_VERSION_ID"
       buildkite-agent meta-data set "NEW_VERSION_ID" "$NEW_VERSION_ID"
-    
-  - label: ":python: Canary Ramp Version IDs"
-    command: |
-      python3 scripts/canary_ramp.py
-      
-
-
-
   
-      
+  - group: ":lock_with_ink_pen: Canary Ramp"
+    # We skip this if there's no old versions
+    if: build.meta_data["OLD_VERSION_ID"] != ""
+    key: "canary-ramp"
+    steps:
+      - label: ":python: Canary Ramp 1%"
+        command: |
+          python3 -m scripts.canary_ramp.py --ramp-percentage 1
+      - label: "Sleep for 10 seconds"
+        command: |
+          echo "Sleeping for 10 minutes..."
+          sleep 600
+          echo "Done sleeping."
+      - label: ":python: Canary Ramp 5%"
+        command: |
+          python3 -m scripts.canary_ramp.py --ramp-percentage 5
+      - label: "Sleep for 10 seconds"
+        command: |
+          echo "Sleeping for 10 minutes..."
+          sleep 600
+          echo "Done sleeping."
+      - label: ":python: Canary Ramp 10%"
+        command: |
+          python3 -m scripts.canary_ramp.py --ramp-percentage 10
+      - label: "Sleep for 10 seconds"
+        command: |
+          echo "Sleeping for 10 minutes..."
+          sleep 600
+          echo "Done sleeping."
+      - label: ":python: Canary Ramp 25%"
+        command: |
+          python3 -m scripts.canary_ramp.py --ramp-percentage 25
+      - label: "Sleep for 10 seconds"
+        command: |
+          echo "Sleeping for 10 minutes..."
+          sleep 600
+          echo "Done sleeping."
+      - label: ":python: Canary Ramp 50%"
+        command: |
+          python3 -m scripts.canary_ramp.py --ramp-percentage 50
+      - label: "Sleep for 10 seconds"
+        command: |
+          echo "Sleeping for 10 minutes..."
+          sleep 600
+          echo "Done sleeping."
+      - label: ":python: Canary Ramp 75%"
+        command: |
+          python3 -m scripts.canary_ramp.py --ramp-percentage 75
+      - label: "Sleep for 10 seconds"
+        command: |
+          echo "Sleeping for 15 minutes..."
+          sleep 900
+          echo "Done sleeping."
+      - label: ":python: Canary Ramp 100%"
+        command: |
+          python3 -m scripts.canary_ramp.py --ramp-percentage 100

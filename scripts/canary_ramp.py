@@ -1,5 +1,6 @@
 import argparse
 import subprocess
+from scripts.init_globals import *
 
 # We first get the versions 
 # If there's only one version, we will just skip, it should just be skipped

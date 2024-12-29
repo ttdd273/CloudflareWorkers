@@ -1,7 +1,7 @@
 from scripts.init_globals import *
 import requests
 
-def get_old_worker_version():
+def get_worker_versions():
     """
     Returns the old_version_id of a worker if it been changed, which would be 2nd most recent version.
 
@@ -35,4 +35,4 @@ def get_old_worker_version():
         exit(1)
 
 if __name__ == "__main__":
-    get_old_worker_version()
+    get_worker_versions()
