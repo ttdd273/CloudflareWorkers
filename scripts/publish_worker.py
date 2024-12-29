@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import os
-import requests
 import subprocess
 
 ACCOUNT_ID = os.getenv("CLOUDFLARE_ACCOUNT_ID")
@@ -19,7 +18,8 @@ def publish_worker():
     command = [
         "npx",
         "wrangler",
-        "deploy",
+        "versions",
+        "upload",
         "--config",
         f"{WORKER_NAME}/wrangler.toml"
     ]
