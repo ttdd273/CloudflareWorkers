@@ -9,6 +9,7 @@ steps:
 
   - label: "Publish Worker"
     command: |
+      set -x
       python3 scripts/publish_worker.py
 
     
