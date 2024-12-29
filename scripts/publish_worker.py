@@ -31,6 +31,7 @@ def publish_worker():
         print(f"Succesfully published new version.")
     else:
         print(f"Deployment failed: {result}")
+        exit(1)
     
     # try:
     #     with open(script_path, "r") as script_file:
