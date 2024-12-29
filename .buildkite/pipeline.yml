@@ -15,7 +15,7 @@ steps:
 
       cd $WORKER_NAME
 
-      python3 scripts/publish_worker.py
+      python3 ../scripts/publish_worker.py
     # env:
     #   WORKER_NAME: WORKER_NAME=$(buildkite-agent meta-data get WORKER_NAME)
     #   CLOUDFLARE_API_TOKEN: CLOUDFLARE_API_TOKEN=$(buildkite-agent secret get CLOUDFLARE_API_TOKEN)
