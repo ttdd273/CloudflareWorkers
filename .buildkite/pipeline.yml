@@ -21,8 +21,10 @@ steps:
     # -n checks if something is nonempty
     command: |
       read OLD_VERSION_ID NEW_VERSION_ID < <(python3 -m scripts.get_versions)
-      buildkite-agent meta-data set "OLD_VERSION_ID" "$OLD_VERSION_ID"
-      buildkite-agent meta-data set "NEW_VERSION_ID" "$NEW_VERSION_ID"
+      if [ ($OLD_VERSION_ID) != ""]; then 
+        buildkite-agent meta-data set "OLD_VERSION_ID" "$OLD_VERSION_ID"
+        buildkite-agent meta-data set "NEW_VERSION_ID" "$NEW_VERSION_ID"
+      fi
   
   - label: ":lock_with_ink_pen: Canary Ramp"
     # We skip this if there's no old versions, we need to pipeline upload to do this
