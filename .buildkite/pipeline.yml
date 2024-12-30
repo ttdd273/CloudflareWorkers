@@ -47,51 +47,105 @@ steps:
           - label: ":python: Canary Ramp 1%"
             command: |
               python3 -m scripts.canary_ramp --ramp-percentage 1
-          - label: "Sleep for 10 seconds"
+          - label: "Sleep for 10 minutes"
             command: |
               echo "Sleeping for 10 minutes..."
-              sleep 600
+              sleep 6
               echo "Done sleeping."
+          - block: "Approval required before deployment"
+            key: "approval-step"
+            blocked_state: "pending"
+            fields:
+              - text: "Please approve to proceed with deployment."
+                key: "approval"
+                required: true
+                hint: "This is an approval step, you must approve to continue."
+
           - label: ":python: Canary Ramp 5%"
             command: |
               python3 -m scripts.canary_ramp --ramp-percentage 5
-          - label: "Sleep for 10 seconds"
+          - label: "Sleep for 10 minutes"
             command: |
               echo "Sleeping for 10 minutes..."
-              sleep 600
+              sleep 6
               echo "Done sleeping."
+          - block: "Approval required before deployment"
+            key: "approval-step"
+            blocked_state: "pending"
+            fields:
+              - text: "Please approve to proceed with deployment."
+                key: "approval"
+                required: true
+                hint: "This is an approval step, you must approve to continue."
+            
           - label: ":python: Canary Ramp 10%"
             command: |
               python3 -m scripts.canary_ramp --ramp-percentage 10
-          - label: "Sleep for 10 seconds"
+          - label: "Sleep for 10 minutes"
             command: |
               echo "Sleeping for 10 minutes..."
-              sleep 600
+              sleep 6
               echo "Done sleeping."
+          - block: "Approval required before deployment"
+            key: "approval-step"
+            blocked_state: "pending"
+            fields:
+              - text: "Please approve to proceed with deployment."
+                key: "approval"
+                required: true
+                hint: "This is an approval step, you must approve to continue."
+
           - label: ":python: Canary Ramp 25%"
             command: |
               python3 -m scripts.canary_ramp --ramp-percentage 25
-          - label: "Sleep for 10 seconds"
+          - label: "Sleep for 10 minutes"
             command: |
               echo "Sleeping for 10 minutes..."
-              sleep 600
+              sleep 6
               echo "Done sleeping."
+          - block: "Approval required before deployment"
+            key: "approval-step"
+            blocked_state: "pending"
+            fields:
+              - text: "Please approve to proceed with deployment."
+                key: "approval"
+                required: true
+                hint: "This is an approval step, you must approve to continue."
+
           - label: ":python: Canary Ramp 50%"
             command: |
               python3 -m scripts.canary_ramp --ramp-percentage 50
-          - label: "Sleep for 10 seconds"
+          - label: "Sleep for 10 minutes"
             command: |
               echo "Sleeping for 10 minutes..."
-              sleep 600
+              sleep 6
               echo "Done sleeping."
+          - block: "Approval required before deployment"
+            key: "approval-step"
+            blocked_state: "pending"
+            fields:
+              - text: "Please approve to proceed with deployment."
+                key: "approval"
+                required: true
+                hint: "This is an approval step, you must approve to continue."
+
           - label: ":python: Canary Ramp 75%"
             command: |
               python3 -m scripts.canary_ramp --ramp-percentage 75
-          - label: "Sleep for 10 seconds"
+          - label: "Sleep for 15 minutes"
             command: |
               echo "Sleeping for 15 minutes..."
-              sleep 900
+              sleep 9
               echo "Done sleeping."
+          - block: "Approval required before deployment"
+            key: "approval-step"
+            blocked_state: "pending"
+            fields:
+              - text: "Please approve to proceed with deployment."
+                key: "approval"
+                required: true
+                hint: "This is an approval step, you must approve to continue."
+
           - label: ":python: Canary Ramp 100%"
             command: |
               python3 -m scripts.canary_ramp --ramp-percentage 100
