@@ -1,6 +1,7 @@
 from scripts.init_globals import *
 import requests
 import sys
+import subprocess
 
 def get_worker_versions():
     """
@@ -24,20 +25,15 @@ def get_worker_versions():
 
             # print("New Version:", new_version_id)
             # print("Old Version:", old_version_id)
-            # os.environ["OLD_VERSION_ID"] = old_version_id
-            # os.environ["NEW_VERSION_ID"] = new_version_id
-            
-            # print(f"export OLD_VERSION_ID={old_version_id}")
-            # print(f"export NEW_VERSION_ID={new_version_id}")
-            # print('hi')
-            print(f"{old_version_id} {new_version_id}")
-            # return f"{old_version_id} {new_version_id}"
-        else:
-            # To deploy the first version of the worker, I guess we can use the publish command
-            # print("This is the first deploy, come up with a diff workflow")
-            # This is fine, nothing gets returned
-            # print("fu")
-            return ""
+            os.environ["OLD_VERSION_ID"] = old_version_id
+            os.environ["NEW_VERSION_ID"] = new_version_id
+
+            subprocess.run(['buildkite-agent',  'meta-data', 'set', 'OLD_VERSION_ID', old_version_id], capture_output=True, text=True)
+            subprocess.run(['buildkite-agent',  'meta-data', 'set', 'OLD_VERSION_ID', new_version_id], capture_output=True, text=True)
+        # else:
+        # To deploy the first version of the worker, I guess we can use the publish command
+        # print("This is the first deploy, come up with a diff workflow")
+        # This is fine, nothing gets returned
     else:
         print(f"Version fetch failed. Status code: {response.status_code}, Response: {response.text}", file=sys.stderr)
         sys.exit(1)
