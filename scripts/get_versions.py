@@ -23,15 +23,15 @@ def get_worker_versions():
 
             # print("New Version:", new_version_id)
             # print("Old Version:", old_version_id)
-            return f"${old_version_id} ${new_version_id}"
+            os.environ["OLD_VERSION_ID"] = old_version_id
+            os.environ["NEW_VERSION_ID"] = new_version_id
         else:
             # To deploy the first version of the worker, I guess we can use the publish command
             # print("This is the first deploy, come up with a diff workflow")
-            return None, None
+            # This is fine, nothing gets returned
+            exit(0)
     else:
-        print(
-            f"Version fetch failed. Status code: {response.status_code}, Response: {response.text}"
-        )
+        print(f"Version fetch failed. Status code: {response.status_code}, Response: {response.text}")
         exit(1)
 
 if __name__ == "__main__":
