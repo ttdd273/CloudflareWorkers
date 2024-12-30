@@ -1,4 +1,9 @@
-steps:    
+env:
+  WORKER_NAME: "$(buildkite-agent meta-data get WORKER_NAME)"
+  CLOUDFLARE_API_TOKEN: "$(buildkite-agent secret get CLOUDFLARE_API_TOKEN)"
+  CLOUDFLARE_ACCOUNT_ID: "$(buildkite-agent secret get CLOUDFLARE_ACCOUNT_ID)"
+
+steps:
   - block: "Enter Worker Name"
     blocked_state: running
     fields:
@@ -10,10 +15,6 @@ steps:
   - label: "Publish Worker"
     key: "publish-worker"
     command: |
-      export WORKER_NAME=$(buildkite-agent meta-data get WORKER_NAME)
-      export CLOUDFLARE_API_TOKEN=$(buildkite-agent secret get CLOUDFLARE_API_TOKEN)
-      export CLOUDFLARE_ACCOUNT_ID=$(buildkite-agent secret get CLOUDFLARE_ACCOUNT_ID)
-
       python3 -m scripts.publish_worker
 
   - label: ":python: Get Worker Versions"
