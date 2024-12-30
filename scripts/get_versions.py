@@ -23,7 +23,7 @@ def get_worker_versions():
 
             # print("New Version:", new_version_id)
             # print("Old Version:", old_version_id)
-            return old_version_id, new_version_id
+            return f"${old_version_id} ${new_version_id}"
         else:
             # To deploy the first version of the worker, I guess we can use the publish command
             # print("This is the first deploy, come up with a diff workflow")
