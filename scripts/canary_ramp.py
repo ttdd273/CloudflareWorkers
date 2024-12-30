@@ -15,6 +15,8 @@ def gradual_deploy(new_ver_id, new_ver_perc, old_ver_id, old_ver_perc):
         f"{new_ver_id}@{new_ver_perc}%",
         f"{old_ver_id}@{old_ver_perc}%",
         "-y",
+        "--config",
+        f"{WORKER_NAME}/wrangler.toml"
     ]
 
     # Run the subprocess for this
@@ -23,6 +25,7 @@ def gradual_deploy(new_ver_id, new_ver_perc, old_ver_id, old_ver_perc):
         print(f"Succesfully deploy new version ({new_ver_id}) to {new_ver_perc}%")
     else:
         print(f"Deployment failed: {result}")
+        exit(1)
 
 def canary_ramp(new_version_id, old_version_id, ramp_perc):
     try:

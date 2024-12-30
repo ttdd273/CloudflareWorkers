@@ -35,17 +35,19 @@ steps:
       export WORKER_NAME=$(buildkite-agent meta-data get WORKER_NAME)
       export CLOUDFLARE_API_TOKEN=$(buildkite-agent secret get CLOUDFLARE_API_TOKEN)
       export CLOUDFLARE_ACCOUNT_ID=$(buildkite-agent secret get CLOUDFLARE_ACCOUNT_ID)
-      
       export OLD_VERSION_ID=$(buildkite-agent meta-data get "OLD_VERSION_ID" --default "")
       export NEW_VERSION_ID=$(buildkite-agent meta-data get "NEW_VERSION_ID" --default "")
-
-      echo $OLD_VERSION_ID
 
       if [ -z "$OLD_VERSION_ID" ] && [ -z "$NEW_VERSION_ID" ]; then 
         cat <<- YAML | buildkite-agent pipeline upload
         steps:
           - label: ":python: Canary Ramp 1%"
             command: |
+              export WORKER_NAME=$(buildkite-agent meta-data get WORKER_NAME)
+              export CLOUDFLARE_API_TOKEN=$(buildkite-agent secret get CLOUDFLARE_API_TOKEN)
+              export CLOUDFLARE_ACCOUNT_ID=$(buildkite-agent secret get CLOUDFLARE_ACCOUNT_ID)
+              export OLD_VERSION_ID=$(buildkite-agent meta-data get "OLD_VERSION_ID" --default "")
+              export NEW_VERSION_ID=$(buildkite-agent meta-data get "NEW_VERSION_ID" --default "")
               python3 -m scripts.canary_ramp --ramp-percentage 1
           - label: "Sleep for 10 minutes"
             command: |
@@ -62,6 +64,11 @@ steps:
 
           - label: ":python: Canary Ramp 5%"
             command: |
+              export WORKER_NAME=$(buildkite-agent meta-data get WORKER_NAME)
+              export CLOUDFLARE_API_TOKEN=$(buildkite-agent secret get CLOUDFLARE_API_TOKEN)
+              export CLOUDFLARE_ACCOUNT_ID=$(buildkite-agent secret get CLOUDFLARE_ACCOUNT_ID)
+              export OLD_VERSION_ID=$(buildkite-agent meta-data get "OLD_VERSION_ID" --default "")
+              export NEW_VERSION_ID=$(buildkite-agent meta-data get "NEW_VERSION_ID" --default "")
               python3 -m scripts.canary_ramp --ramp-percentage 5
           - label: "Sleep for 10 minutes"
             command: |
@@ -78,6 +85,11 @@ steps:
             
           - label: ":python: Canary Ramp 10%"
             command: |
+              export WORKER_NAME=$(buildkite-agent meta-data get WORKER_NAME)
+              export CLOUDFLARE_API_TOKEN=$(buildkite-agent secret get CLOUDFLARE_API_TOKEN)
+              export CLOUDFLARE_ACCOUNT_ID=$(buildkite-agent secret get CLOUDFLARE_ACCOUNT_ID)
+              export OLD_VERSION_ID=$(buildkite-agent meta-data get "OLD_VERSION_ID" --default "")
+              export NEW_VERSION_ID=$(buildkite-agent meta-data get "NEW_VERSION_ID" --default "")
               python3 -m scripts.canary_ramp --ramp-percentage 10
           - label: "Sleep for 10 minutes"
             command: |
@@ -94,6 +106,11 @@ steps:
 
           - label: ":python: Canary Ramp 25%"
             command: |
+              export WORKER_NAME=$(buildkite-agent meta-data get WORKER_NAME)
+              export CLOUDFLARE_API_TOKEN=$(buildkite-agent secret get CLOUDFLARE_API_TOKEN)
+              export CLOUDFLARE_ACCOUNT_ID=$(buildkite-agent secret get CLOUDFLARE_ACCOUNT_ID)
+              export OLD_VERSION_ID=$(buildkite-agent meta-data get "OLD_VERSION_ID" --default "")
+              export NEW_VERSION_ID=$(buildkite-agent meta-data get "NEW_VERSION_ID" --default "")
               python3 -m scripts.canary_ramp --ramp-percentage 25
           - label: "Sleep for 10 minutes"
             command: |
@@ -110,6 +127,11 @@ steps:
 
           - label: ":python: Canary Ramp 50%"
             command: |
+              export WORKER_NAME=$(buildkite-agent meta-data get WORKER_NAME)
+              export CLOUDFLARE_API_TOKEN=$(buildkite-agent secret get CLOUDFLARE_API_TOKEN)
+              export CLOUDFLARE_ACCOUNT_ID=$(buildkite-agent secret get CLOUDFLARE_ACCOUNT_ID)
+              export OLD_VERSION_ID=$(buildkite-agent meta-data get "OLD_VERSION_ID" --default "")
+              export NEW_VERSION_ID=$(buildkite-agent meta-data get "NEW_VERSION_ID" --default "")
               python3 -m scripts.canary_ramp --ramp-percentage 50
           - label: "Sleep for 10 minutes"
             command: |
@@ -126,6 +148,11 @@ steps:
 
           - label: ":python: Canary Ramp 75%"
             command: |
+              export WORKER_NAME=$(buildkite-agent meta-data get WORKER_NAME)
+              export CLOUDFLARE_API_TOKEN=$(buildkite-agent secret get CLOUDFLARE_API_TOKEN)
+              export CLOUDFLARE_ACCOUNT_ID=$(buildkite-agent secret get CLOUDFLARE_ACCOUNT_ID)
+              export OLD_VERSION_ID=$(buildkite-agent meta-data get "OLD_VERSION_ID" --default "")
+              export NEW_VERSION_ID=$(buildkite-agent meta-data get "NEW_VERSION_ID" --default "")
               python3 -m scripts.canary_ramp --ramp-percentage 75
           - label: "Sleep for 15 minutes"
             command: |
@@ -142,6 +169,11 @@ steps:
 
           - label: ":python: Canary Ramp 100%"
             command: |
+              export WORKER_NAME=$(buildkite-agent meta-data get WORKER_NAME)
+              export CLOUDFLARE_API_TOKEN=$(buildkite-agent secret get CLOUDFLARE_API_TOKEN)
+              export CLOUDFLARE_ACCOUNT_ID=$(buildkite-agent secret get CLOUDFLARE_ACCOUNT_ID)
+              export OLD_VERSION_ID=$(buildkite-agent meta-data get "OLD_VERSION_ID" --default "")
+              export NEW_VERSION_ID=$(buildkite-agent meta-data get "NEW_VERSION_ID" --default "")
               python3 -m scripts.canary_ramp --ramp-percentage 100
       YAML
       fi
