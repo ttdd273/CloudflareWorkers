@@ -21,7 +21,7 @@ steps:
     # -n checks if something is nonempty
     command: |
       read OLD_VERSION_ID NEW_VERSION_ID < <(python3 -m scripts.get_versions)
-      if [ ($OLD_VERSION_ID) != ""]; then 
+      if [ -n $OLD_VERSION_ID ]; then 
         buildkite-agent meta-data set "OLD_VERSION_ID" "$OLD_VERSION_ID"
         buildkite-agent meta-data set "NEW_VERSION_ID" "$NEW_VERSION_ID"
       fi
