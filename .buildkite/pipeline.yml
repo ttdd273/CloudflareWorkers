@@ -7,11 +7,6 @@ steps:
         required: true
         hint: "Enter the name of the worker"
 
-  - label: "Initialize Global Variables"
-    key: "initialize-globals"
-    command: |
-      python3 -m scripts.init_globals
-
   - label: "Publish Worker"
     key: "publish-worker"
     command: |
