@@ -1,5 +1,6 @@
 from scripts.init_globals import *
 import requests
+import os
 
 def get_worker_versions():
     """
@@ -23,14 +24,19 @@ def get_worker_versions():
 
             # print("New Version:", new_version_id)
             # print("Old Version:", old_version_id)
-            os.environ["OLD_VERSION_ID"] = old_version_id
-            os.environ["NEW_VERSION_ID"] = new_version_id
+            # os.environ["OLD_VERSION_ID"] = old_version_id
+            # os.environ["NEW_VERSION_ID"] = new_version_id
+            
+            print(f"export OLD_VERSION_ID={old_version_id}")
+            print(f"export NEW_VERSION_ID={new_version_id}")
         else:
+            print("fuk")
             # To deploy the first version of the worker, I guess we can use the publish command
             # print("This is the first deploy, come up with a diff workflow")
             # This is fine, nothing gets returned
             exit(0)
     else:
+        print("shi")
         print(f"Version fetch failed. Status code: {response.status_code}, Response: {response.text}")
         exit(1)
 
