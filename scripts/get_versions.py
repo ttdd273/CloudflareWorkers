@@ -29,7 +29,8 @@ def get_worker_versions():
             os.environ["NEW_VERSION_ID"] = new_version_id
 
             subprocess.run(['buildkite-agent',  'meta-data', 'set', 'OLD_VERSION_ID', old_version_id], capture_output=True, text=True)
-            subprocess.run(['buildkite-agent',  'meta-data', 'set', 'OLD_VERSION_ID', new_version_id], capture_output=True, text=True)
+            subprocess.run(['buildkite-agent',  'meta-data', 'set', 'NEW_VERSION_ID', new_version_id], capture_output=True, text=True)
+            print("Version IDs saved as metadata.")
         # else:
         # To deploy the first version of the worker, I guess we can use the publish command
         # print("This is the first deploy, come up with a diff workflow")
