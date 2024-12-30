@@ -20,7 +20,7 @@ steps:
     key: "get-versions"
     # -n checks if something is nonempty
     command: |
-      eval $(python3 -m scripts.get_versions)
+      read OLD_VERSION_ID NEW_VERSION_ID < <(python3 script.py)
 
       echo $OLD_VERSION_ID
       if [ -z "${OLD_VERSION_ID}" ]; then 
