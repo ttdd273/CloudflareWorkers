@@ -2,7 +2,6 @@ steps:
   - label: ":nodejs: Test All Workers (Main Branch)"
     command: |
       echo "Setting up Node.js environment..."
-      nvm install 18
       echo "Running tests for all workers..."
       
       dirs=$(find . -maxdepth 1 -type d -name '*worker*')
