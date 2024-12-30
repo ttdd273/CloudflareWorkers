@@ -9,8 +9,12 @@ steps:
         default: "my-first-worker"
 
   - label: "Worker Changes"
-    command: |      
-      pip install -r scripts/requirements.txt
+    command: |
+      export WORKER_NAME=$(buildkite-agent meta-data get WORKER_NAME)
+      export CLOUDFLARE_API_TOKEN=$(buildkite-agent secret get CLOUDFLARE_API_TOKEN)
+      export CLOUDFLARE_ACCOUNT_ID=$(buildkite-agent secret get CLOUDFLARE_ACCOUNT_ID)
+      
+      python3 -m scripts.show_diff
     plugins:
       - docker#v5.9.0:
           image: "python:3.13"

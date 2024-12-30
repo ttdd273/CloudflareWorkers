@@ -2,7 +2,7 @@ import requests
 import difflib
 import sys
 from scripts.helpers import *
-import toml
+# import toml
 
 def get_latest_version():
     url = f"{BASE_URL}/versions"
@@ -33,24 +33,24 @@ def get_local_content():
     wrangler_path = f"{WORKER_NAME}/wrangler.toml"
     try:
         # Load the wrangler.toml file
-        with open(wrangler_path, 'r') as toml_file:
-            config = toml.load(toml_file)
+        # with open(wrangler_path, 'r') as toml_file:
+        #     config = toml.load(toml_file)
 
-        content_path = config.get('main', None)
+        # content_path = config.get('main', None)
 
-        if not content_path:
-            raise ValueError(f"'main' field not found in {wrangler_path}")
+        # if not content_path:
+            # raise ValueError(f"'main' field not found in {wrangler_path}")
 
-        local_path = f"{WORKER_NAME/{content_path}}"
+        local_path = f"{WORKER_NAME}/src/index.js"
 
         with open(local_path, "r") as file:
             return file.read()
     except FileNotFoundError:
         print(f"{wrangler_path} not found.", file=sys.stderr)
         sys.exit(1)
-    except toml.TomlDecodeError as e:
-        print(f"Error parsing {wrangler_path}: {e}", file=sys.stderr)
-        sys.exit(1)
+    # except toml.TomlDecodeError as e:
+    #     print(f"Error parsing {wrangler_path}: {e}", file=sys.stderr)
+    #     sys.exit(1)
     except ValueError as e:
         print(f"{e}", file=sys.stderr)
         sys.exit(1)
