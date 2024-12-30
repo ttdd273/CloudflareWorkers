@@ -1,6 +1,6 @@
 import os
 
-# All global vars
+# -----------------------------GLOBAL VARS-------------------------------------
 # The account ID and the Cloudflare API key needs to be a secret of some sort
 
 ACCOUNT_ID = os.getenv("CLOUDFLARE_ACCOUNT_ID")
@@ -11,6 +11,12 @@ HEADERS = {
     "Authorization": f"Bearer {CLOUDFLARE_API_KEY}",
     "Content-Type": "application/json",
 }
+
+# ANSI escape sequences for coloring text
+RED = "\033[31m"
+GREEN = "\033[32m"
+YELLOW = "\033[33m"
+RESET = "\033[0m"
 
 # ----------------------------HELPER FUNCTION----------------------------------------
 def prompt_for_approval(msg):

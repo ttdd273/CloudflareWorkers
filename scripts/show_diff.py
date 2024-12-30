@@ -1,8 +1,9 @@
 import requests
 import difflib
 import sys
+import subprocess
 from scripts.helpers import *
-# import toml
+
 
 def get_latest_version():
     url = f"{BASE_URL}/versions"
@@ -19,45 +20,49 @@ def get_latest_version():
         print(f"Failed to fetch versions: {response.status_code} {response.text}")
         sys.exit(1)
 
+
 def get_latest_content():
     latest_version_id = get_latest_version()
-    url = f"{BASE_URL}/versions/{latest_version_id}"
+    url = f"{BASE_URL}/content/v2"
     response = requests.get(url, headers=HEADERS)
     if response.status_code == 200:
-        return response.json().get("content", "")
+        content = response.text
+        lines = content.splitlines()
+        lines = lines[3:-2]
+        cleaned_content = "\n".join(lines)
+        return cleaned_content
     else:
-        print(f"Failed to fetch version {latest_version_id}: {response.status_code} {response.text}")
+        print(
+            f"Failed to fetch version {latest_version_id}: {response.status_code} {response.text}"
+        )
         sys.exit(1)
+
 
 def get_local_content():
-    wrangler_path = f"{WORKER_NAME}/wrangler.toml"
     try:
-        # Load the wrangler.toml file
-        # with open(wrangler_path, 'r') as toml_file:
-        #     config = toml.load(toml_file)
+        command = [
+            "npx",
+            "wrangler",
+            "deploy",
+            "--dry-run",
+            "--outdir",
+            f"dist",
+            "--config",
+            f"{WORKER_NAME}/wrangler.toml",
+        ]
 
-        # content_path = config.get('main', None)
-
-        # if not content_path:
-            # raise ValueError(f"'main' field not found in {wrangler_path}")
-
-        local_path = f"{WORKER_NAME}/src/index.js"
-
-        with open(local_path, "r") as file:
-            return file.read()
-    except FileNotFoundError:
-        print(f"{wrangler_path} not found.", file=sys.stderr)
+        result = subprocess.run(command, capture_output=True, text=True)
+        if result.returncode != 0:
+            print(f"Local dry run failed: {result}")
+            exit(1)
+        # Read the file and return it
+        with open(f"{WORKER_NAME}/dist/index.js", "r") as file:
+            content = file.read()
+        return content
+    except Exception as e:
+        print(f"Something went wrong in getting local content: {e}", file=sys.stderr)
         sys.exit(1)
-    # except toml.TomlDecodeError as e:
-    #     print(f"Error parsing {wrangler_path}: {e}", file=sys.stderr)
-    #     sys.exit(1)
-    except ValueError as e:
-        print(f"{e}", file=sys.stderr)
-        sys.exit(1)
-    except Exception:
-        print(f'Something went wrong in getting local content', file=sys.stderr)
-        sys.exit(1)
-    
+
 
 def display_diff(old_content, new_content):
     diff = difflib.unified_diff(
@@ -65,9 +70,18 @@ def display_diff(old_content, new_content):
         new_content.splitlines(),
         fromfile="Old Version",
         tofile="New Version",
-        lineterm=""
+        lineterm="",
     )
-    return "\n".join(diff)
+    colored_diff = []
+    
+    for line in diff:
+        if line.startswith("+") or line.startswith("+++"):
+            colored_diff.append(f"{GREEN}{line}{RESET}")
+        elif line.startswith("-") or line.startswith("---"):
+            colored_diff.append(f"{RED}{line}{RESET}")
+        else:
+            colored_diff.append(line)
+    return "\n".join(colored_diff)
 
 
 def main():
@@ -75,7 +89,9 @@ def main():
     # Compare it with the current version
     old_content = get_latest_content()
     new_content = get_local_content()
-    display_diff(old_content, new_content)
+    # print(old_content)
+    print(display_diff(old_content, new_content))
+
 
 if __name__ == "__main__":
     main()
