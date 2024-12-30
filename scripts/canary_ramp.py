@@ -24,34 +24,23 @@ def gradual_deploy(new_ver_id, new_ver_perc, old_ver_id, old_ver_perc):
     else:
         print(f"Deployment failed: {result}")
 
-def canary_ramp(new_version_id, old_version_id):
-    ramp_up_values = [1, 5, 10, 25, 50, 75, 100]
+def canary_ramp(new_version_id, old_version_id, ramp_perc):
+    try:
+        gradual_deploy(new_version_id, ramp_perc, old_version_id, 100 - ramp_perc)
+    except Exception as error:
+        print(f"Exception occurred when deploying: {error}")
 
-    for ramp_perc in ramp_up_values:
-        try:
-            gradual_deploy(new_version_id, ramp_perc, old_version_id, 100 - ramp_perc)
-        except Exception as error:
-            print(f"Exception occurred when deploying: {error}")
-
-        if ramp_perc != 100:
-            if prompt_for_approval(
-                f"Deployed to {ramp_perc}%. Do you approve to proceed? (y/n):"
-            ):
-                continue
-            else:
-                # We need to abort the workflow
-                gradual_deploy(new_version_id, 0, old_version_id, 100)
-                break
-
-if __name__ == "main":
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Canary deployment script.")
     parser.add_argument(
         "--ramp-percentage", 
         required=True, 
         help="The ramp percentage for the new version."
     )
-
     args = parser.parse_args()
-    ramp_perc = args.ramp_percentage
 
-    canary_ramp(ramp_perc)
+    ramp_perc = int(args.ramp_percentage)
+    old_version_id = os.getenv("OLD_VERSION_ID")
+    new_version_id = os.getenv("NEW_VERSION_ID")
+
+    canary_ramp(old_version_id, new_version_id, ramp_perc)
