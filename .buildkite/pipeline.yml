@@ -14,7 +14,8 @@ steps:
       export CLOUDFLARE_API_TOKEN=$(buildkite-agent secret get CLOUDFLARE_API_TOKEN)
       export CLOUDFLARE_ACCOUNT_ID=$(buildkite-agent secret get CLOUDFLARE_ACCOUNT_ID)
       
-      python3 -m scripts.show_diff
+      python3 -m scripts.show_diff > diff.txt
+      cat diff.txt
 
   - block: "Approval required before publishing"
     blocked_state: "running"
