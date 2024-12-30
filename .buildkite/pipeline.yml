@@ -15,9 +15,6 @@ steps:
       export CLOUDFLARE_ACCOUNT_ID=$(buildkite-agent secret get CLOUDFLARE_ACCOUNT_ID)
       
       python3 -m scripts.show_diff
-    plugins:
-      - docker#v5.9.0:
-          image: "python:3.13"
 
   - block: "Approval required before publishing"
     blocked_state: "running"
