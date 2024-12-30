@@ -6,7 +6,7 @@ steps:
         key: "WORKER_NAME"
         required: true
         hint: "Enter the name of the worker"
-        default: "my-first_worker"
+        default: "my-first-worker"
 
   - label: "Publish Worker"
     key: "publish-worker"
