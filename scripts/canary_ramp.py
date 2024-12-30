@@ -1,6 +1,6 @@
 import argparse
 import subprocess
-from scripts.init_globals import *
+from scripts.helpers import *
 
 # We first get the versions 
 # If there's only one version, we will just skip, it should just be skipped
@@ -33,7 +33,7 @@ def canary_ramp(new_version_id, old_version_id, ramp_perc):
     except Exception as error:
         print(f"Exception occurred when deploying: {error}")
 
-if __name__ == "__main__":
+def main():
     parser = argparse.ArgumentParser(description="Canary deployment script.")
     parser.add_argument(
         "--ramp-percentage", 
@@ -47,3 +47,6 @@ if __name__ == "__main__":
     new_version_id = os.getenv("NEW_VERSION_ID")
 
     canary_ramp(new_version_id, old_version_id, ramp_perc)
+
+if __name__ == "__main__":
+    main()

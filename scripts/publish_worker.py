@@ -1,5 +1,6 @@
 import subprocess
-from scripts.init_globals import *
+from scripts.helpers import *
+import sys
 
 def publish_worker():
     """Publish the worker script to Cloudflare."""
@@ -19,7 +20,7 @@ def publish_worker():
         print(f"Succesfully published new version.")
     else:
         print(f"Deployment failed: {result}")
-        exit(1)
+        sys.exit(1)
 
 if __name__ == "__main__":
     publish_worker()

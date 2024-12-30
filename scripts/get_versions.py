@@ -1,4 +1,4 @@
-from scripts.init_globals import *
+from scripts.helpers import *
 import requests
 import sys
 import subprocess

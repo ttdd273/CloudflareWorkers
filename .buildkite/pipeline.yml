@@ -8,6 +8,22 @@ steps:
         hint: "Enter the name of the worker"
         default: "my-first-worker"
 
+  - label: "Worker Changes"
+    command: |
+      export WORKER_NAME=$(buildkite-agent meta-data get WORKER_NAME)
+      export CLOUDFLARE_API_TOKEN=$(buildkite-agent secret get CLOUDFLARE_API_TOKEN)
+      export CLOUDFLARE_ACCOUNT_ID=$(buildkite-agent secret get CLOUDFLARE_ACCOUNT_ID)
+
+      python3 -m scripts.show_diff
+
+  - block: "Approval required before publishing"
+    blocked_state: "running"
+    fields:
+      - text: "Please approve to proceed with publishing the worker."
+        key: "approval"
+        required: true
+        hint: "This is an approval step, you must approve to continue."
+
   - label: "Publish Worker"
     key: "publish-worker"
     command: |
