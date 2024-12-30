@@ -46,4 +46,4 @@ if __name__ == "__main__":
     old_version_id = os.getenv("OLD_VERSION_ID")
     new_version_id = os.getenv("NEW_VERSION_ID")
 
-    canary_ramp(old_version_id, new_version_id, ramp_perc)
+    canary_ramp(new_version_id, old_version_id, ramp_perc)
