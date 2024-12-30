@@ -39,7 +39,9 @@ steps:
       export OLD_VERSION_ID=$(buildkite-agent meta-data get "OLD_VERSION_ID" --default "")
       export NEW_VERSION_ID=$(buildkite-agent meta-data get "NEW_VERSION_ID" --default "")
 
-      if [ -z $OLD_VERSION_ID && -z $NEW_VERSION_ID ]; then 
+      echo $OLD_VERSION_ID
+
+      if [ -z "$OLD_VERSION_ID" ] && [ -z "$NEW_VERSION_ID" ]; then 
         cat <<- YAML | buildkite-agent pipeline upload
         steps:
           - label: ":python: Canary Ramp 1%"
