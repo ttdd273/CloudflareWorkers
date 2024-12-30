@@ -12,8 +12,8 @@ def gradual_deploy(new_ver_id, new_ver_perc, old_ver_id, old_ver_perc):
         "wrangler",
         "versions",
         "deploy",
-        f"{new_ver_id}@{new_ver_perc}%",
         f"{old_ver_id}@{old_ver_perc}%",
+        f"{new_ver_id}@{new_ver_perc}%",
         "-y",
         "--config",
         f"{WORKER_NAME}/wrangler.toml"
