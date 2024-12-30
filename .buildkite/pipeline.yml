@@ -1,8 +1,3 @@
-env:
-  WORKER_NAME: "$(buildkite-agent meta-data get WORKER_NAME)"
-  CLOUDFLARE_API_TOKEN: "$(buildkite-agent secret get CLOUDFLARE_API_TOKEN)"
-  CLOUDFLARE_ACCOUNT_ID: "$(buildkite-agent secret get CLOUDFLARE_ACCOUNT_ID)"
-
 steps:
   - block: "Enter Worker Name"
     blocked_state: running
@@ -15,12 +10,20 @@ steps:
   - label: "Publish Worker"
     key: "publish-worker"
     command: |
+      export WORKER_NAME=$(buildkite-agent meta-data get WORKER_NAME)
+      export CLOUDFLARE_API_TOKEN=$(buildkite-agent secret get CLOUDFLARE_API_TOKEN)
+      export CLOUDFLARE_ACCOUNT_ID=$(buildkite-agent secret get CLOUDFLARE_ACCOUNT_ID)
+
       python3 -m scripts.publish_worker
 
   - label: ":python: Get Worker Versions"
     key: "get-versions"
     # -n checks if something is nonempty
     command: |
+      export WORKER_NAME=$(buildkite-agent meta-data get WORKER_NAME)
+      export CLOUDFLARE_API_TOKEN=$(buildkite-agent secret get CLOUDFLARE_API_TOKEN)
+      export CLOUDFLARE_ACCOUNT_ID=$(buildkite-agent secret get CLOUDFLARE_ACCOUNT_ID)
+
       read OLD_VERSION_ID NEW_VERSION_ID < <(python3 -m scripts.get_versions)
 
       echo $OLD_VERSION_ID
@@ -34,6 +37,10 @@ steps:
     key: "canary-ramp"
     depends_on: "get-versions"
     command: |
+      export WORKER_NAME=$(buildkite-agent meta-data get WORKER_NAME)
+      export CLOUDFLARE_API_TOKEN=$(buildkite-agent secret get CLOUDFLARE_API_TOKEN)
+      export CLOUDFLARE_ACCOUNT_ID=$(buildkite-agent secret get CLOUDFLARE_ACCOUNT_ID)
+      
       if [ $$(buildkite-agent meta-data get OLD_VERSION_ID) == "" ]; then 
         cat <<- YAML | buildkite-agent pipeline upload
         steps:
