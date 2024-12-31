@@ -9,19 +9,7 @@ steps:
     # dirs=$(find . -maxdepth 1 -type d -name '*worker*')
     depends_on: "find_worker_dirs"
     command: |
-      echo $(buildkite-agent meta-data get WORKER_DIRS)
-      dirs=$(buildkite-agent meta-data get WORKER_DIRS)
-      echo "Setting up Node.js environment..."
-      
-      echo "Running tests for all workers ${dirs}"
-
-      for dir in $(buildkite-agent meta-data get WORKER_DIRS); do
-        echo "Testing worker: $dir"
-        cd $dir
-        npm ci
-        npm test
-        cd ..
-      done
+      ./scripts/test_all.sh
 
   - wait: ~
 
