@@ -6,9 +6,13 @@ steps:
       
       pwd
 
+      ls -al
+
       cd .. 
 
       pwd
+
+      ls -al
 
       dirs=$(find . -maxdepth 1 -type d)
 
