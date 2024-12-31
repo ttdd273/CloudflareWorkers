@@ -2,9 +2,10 @@ steps:
   - label: ":nodejs: Test All Workers (Main Branch)"
     command: |
       echo "Setting up Node.js environment..."
-      echo "Running tests for all workers..."
       
       dirs=$(find . -maxdepth 1 -type d -name '*worker*')
+
+      echo "Running tests for all workers ${dirs}"
 
       for dir in $dirs; do
         echo "Testing worker: $dir"
@@ -13,3 +14,12 @@ steps:
         npm test
         cd ..
       done
+
+  - wait 
+
+  - trigger: "deployment-pipeline"
+    label: ":rocket: Trigger Deployment Pipeline"
+    build:
+      message: "Tests passed, triggering deployment"
+      commit: "${BUILDKITE_COMMIT}"
+      branch: "${BUILDKITE_BRANCH}"
