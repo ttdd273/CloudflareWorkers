@@ -5,6 +5,7 @@ steps:
       
       dirs=$(find . -maxdepth 1 -type d -name '*worker*')
 
+      echo $dirs
       echo "Running tests for all workers ${dirs}"
 
       for dir in $dirs; do
@@ -15,9 +16,9 @@ steps:
         cd ..
       done
 
-  - wait 
+  - wait: ~
 
-  - trigger: "deployment-pipeline"
+  - trigger: "Cloudflare Worker Canary Ramp"
     label: ":rocket: Trigger Deployment Pipeline"
     build:
       message: "Tests passed, triggering deployment"
