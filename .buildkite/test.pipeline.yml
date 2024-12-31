@@ -18,7 +18,7 @@ steps:
 
   - wait: ~
 
-  - trigger: "Cloudflare Worker Canary Ramp"
+  - trigger: "cloudflare-worker-canary-ramp"
     label: ":rocket: Trigger Deployment Pipeline"
     build:
       message: "Tests passed, triggering deployment"
