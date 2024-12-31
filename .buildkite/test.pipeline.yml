@@ -1,10 +1,11 @@
 steps:
   - label: ":nodejs: Test All Workers (Main Branch)"
+    # dirs=$(find . -maxdepth 1 -type d -name '*worker*')
     command: |
       echo "Setting up Node.js environment..."
       
-      dirs=$(find . -maxdepth 1 -type d -name '*worker*')
-
+      dirs=$(find . -maxdepth 1 -type d)
+      
       echo $dirs
       echo "Running tests for all workers ${dirs}"
 
