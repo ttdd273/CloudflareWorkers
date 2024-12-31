@@ -4,8 +4,10 @@ steps:
     command: |
       echo "Setting up Node.js environment..."
       
+      pwd
+
       dirs=$(find . -maxdepth 1 -type d)
-      
+
       echo $dirs
       echo "Running tests for all workers ${dirs}"
 
