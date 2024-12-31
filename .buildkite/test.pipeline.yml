@@ -6,6 +6,10 @@ steps:
       
       pwd
 
+      cd .. 
+
+      pwd
+
       dirs=$(find . -maxdepth 1 -type d)
 
       echo $dirs
