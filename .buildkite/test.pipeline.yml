@@ -1,13 +1,5 @@
 steps:
-  - label: "Find all worker directories"
-    key: "find_worker_dirs"
-    command: |
-      dirs=$(find . -maxdepth 1 -type d -name '*worker*')
-      buildkite-agent meta-data set WORKER_DIRS "$(find . -maxdepth 1 -type d)"
-
   - label: ":nodejs: Test All Workers (Main Branch)"
-    # dirs=$(find . -maxdepth 1 -type d -name '*worker*')
-    depends_on: "find_worker_dirs"
     command: |
       ./scripts/test_all.sh
 
