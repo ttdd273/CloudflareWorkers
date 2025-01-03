@@ -2,7 +2,7 @@ services:
   worker-test:
     image: node:18
     working_dir: /app
-    # Mounting . as the /app directory 
+    # Mounting .. as the /app directory 
     volumes:
       - ..:/app
     command: /bin/bash ./scripts/test_all.sh
