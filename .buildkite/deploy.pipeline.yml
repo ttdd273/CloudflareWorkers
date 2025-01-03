@@ -1,4 +1,15 @@
 steps:
+  - label: "Worker Changes"
+    command: |
+      cd ..
+      pwd
+      ls 
+      cd cloudflare-workers-test
+      ls
+      cd my-first-worker
+      rm -rf node_modules
+
+
   - block: "Enter Worker Name"
     blocked_state: running
     fields:
