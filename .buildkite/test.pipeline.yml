@@ -2,12 +2,16 @@ steps:
   - label: ":nodejs: Test All Workers (Main Branch)"
     command: |
       ./scripts/test_all.sh
+    plugins:
+    - docker-compose#v3.0.3:
+        run: node_test
+        config: docker/docker-compose.test.yml
 
-  - wait: ~
+  # - wait: ~
 
-  - trigger: "cloudflare-worker-canary-ramp"
-    label: ":rocket: Trigger Deployment Pipeline"
-    build:
-      message: "Tests passed, triggering deployment"
-      commit: "${BUILDKITE_COMMIT}"
-      branch: "${BUILDKITE_BRANCH}"
+  # - trigger: "cloudflare-worker-canary-ramp"
+  #   label: ":rocket: Trigger Deployment Pipeline"
+  #   build:
+  #     message: "Tests passed, triggering deployment"
+  #     commit: "${BUILDKITE_COMMIT}"
+  #     branch: "${BUILDKITE_BRANCH}"
