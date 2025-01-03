@@ -4,5 +4,5 @@ services:
     working_dir: /app
     # Mounting . as the /app directory 
     volumes:
-      - .:/app
-    command: ./scripts/test_all.sh
+      - ..:/app
+    command: /bin/bash ./scripts/test_all.sh
