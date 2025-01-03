@@ -1,4 +1,7 @@
 steps:
+  - label: ":docker: Check Docker Compose Version"
+    command: docker-compose --version
+
   - label: ":nodejs: Test All Workers (Main Branch)"
     command: |
       ./scripts/test_all.sh
