@@ -5,4 +5,3 @@ services:
     # Mounting .. as the /app directory 
     volumes:
       - ..:/app
-    command: /bin/bash ./scripts/test_all.sh
