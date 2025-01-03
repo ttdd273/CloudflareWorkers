@@ -1,7 +1,5 @@
-version: "3.8"
-
 services:
-  node-test:
+  worker-test:
     image: node:18
     working_dir: /app
     # Mounting . as the /app directory 

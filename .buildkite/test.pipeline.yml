@@ -4,7 +4,7 @@ steps:
       ./scripts/test_all.sh
     plugins:
     - docker-compose#v3.0.3:
-        run: node_test
+        run: worker-test
         config: docker/docker-compose.test.yml
 
   # - wait: ~
