@@ -8,6 +8,11 @@ steps:
       ls
       cd my-first-worker
       rm -rf node_modules
+    plugin:
+    - docker-compose#v3.0.3:
+        run: worker-test
+        config: docker/docker-compose.test.yml
+
 
 
   - block: "Enter Worker Name"
