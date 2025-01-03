@@ -2,6 +2,8 @@
 
 This is a sample repository to setup GitHub Action to deploy Cloudflare Workers.
 
+We have a test and deploy pipeline.
+
 ## Git 
 To avoid inputing the password for everything Git command, we can add this to the .zshrc
 - `eval "$(ssh-agent -s)"`
