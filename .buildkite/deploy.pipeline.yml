@@ -1,17 +1,4 @@
 steps:
-  - label: "Worker Changes"
-    command: |
-      pwd
-      ls
-      cd my-first-worker
-      rm -rf node_modules
-    plugins:
-    - docker-compose#v3.0.3:
-        run: worker-test
-        config: docker/docker-compose.test.yml
-
-
-
   - block: "Enter Worker Name"
     blocked_state: running
     fields:
