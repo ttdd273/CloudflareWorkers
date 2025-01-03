@@ -2,6 +2,8 @@ steps:
   - label: ":nodejs: Test All Workers (Main Branch)"
     command: |
       ./scripts/test_all.sh
+    hooks:
+      pre-checkout: ./scripts/rm_dir.sh
 
   # - wait: ~
 
