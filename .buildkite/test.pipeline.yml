@@ -7,11 +7,11 @@ steps:
         run: worker-test
         config: docker/docker-compose.test.yml
 
-  # - wait: ~
+  - wait: ~
 
-  # - trigger: "cloudflare-worker-canary-ramp"
-  #   label: ":rocket: Trigger Deployment Pipeline"
-  #   build:
-  #     message: "Tests passed, triggering deployment"
-  #     commit: "${BUILDKITE_COMMIT}"
-  #     branch: "${BUILDKITE_BRANCH}"
+  - trigger: "cloudflare-worker-canary-ramp"
+    label: ":rocket: Trigger Deployment Pipeline"
+    build:
+      message: "Tests passed, triggering deployment"
+      commit: "${BUILDKITE_COMMIT}"
+      branch: "${BUILDKITE_BRANCH}"
