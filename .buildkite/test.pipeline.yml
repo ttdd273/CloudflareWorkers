@@ -9,7 +9,7 @@ steps:
 
   - wait: ~
 
-  - trigger: "cloudflare-worker-canary-ramp"
+  - trigger: "cloudflare-worker-deploy-workflow"
     label: ":rocket: Trigger Deployment Pipeline"
     build:
       message: "Tests passed, triggering deployment"
