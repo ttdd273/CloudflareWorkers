@@ -13,183 +13,187 @@ steps:
       export WORKER_NAME=$(buildkite-agent meta-data get WORKER_NAME)
       export CLOUDFLARE_API_TOKEN=$(buildkite-agent secret get CLOUDFLARE_API_TOKEN)
       export CLOUDFLARE_ACCOUNT_ID=$(buildkite-agent secret get CLOUDFLARE_ACCOUNT_ID)
-      
       python3 -m scripts.show_diff
+    # plugins:
+    #   - docker-compose#v4.15.0: 
+    #     build: app
+    #     args:
+    #       - IMAGE_AUTHOR=${BUILDKITE_BUILD_AUTHOR}
 
-  - block: "Approval required before publishing"
-    blocked_state: "running"
-    fields:
-      - text: "Please approve to proceed with publishing the worker."
-        key: "approval"
-        required: true
-        hint: "This is an approval step, you must approve to continue."
+  # - block: "Approval required before publishing"
+  #   blocked_state: "running"
+  #   fields:
+  #     - text: "Please approve to proceed with publishing the worker."
+  #       key: "approval"
+  #       required: true
+  #       hint: "This is an approval step, you must approve to continue."
 
-  - label: "Publish Worker"
-    key: "publish-worker"
-    command: |
-      export WORKER_NAME=$(buildkite-agent meta-data get WORKER_NAME)
-      export CLOUDFLARE_API_TOKEN=$(buildkite-agent secret get CLOUDFLARE_API_TOKEN)
-      export CLOUDFLARE_ACCOUNT_ID=$(buildkite-agent secret get CLOUDFLARE_ACCOUNT_ID)
+  # - label: "Publish Worker"
+  #   key: "publish-worker"
+  #   command: |
+  #     export WORKER_NAME=$(buildkite-agent meta-data get WORKER_NAME)
+  #     export CLOUDFLARE_API_TOKEN=$(buildkite-agent secret get CLOUDFLARE_API_TOKEN)
+  #     export CLOUDFLARE_ACCOUNT_ID=$(buildkite-agent secret get CLOUDFLARE_ACCOUNT_ID)
 
-      python3 -m scripts.publish_worker
+  #     python3 -m scripts.publish_worker
 
-  - label: ":python: Get Worker Versions"
-    key: "get-versions"
-    # -n checks if something is nonempty
-    command: |
-      export WORKER_NAME=$(buildkite-agent meta-data get WORKER_NAME)
-      export CLOUDFLARE_API_TOKEN=$(buildkite-agent secret get CLOUDFLARE_API_TOKEN)
-      export CLOUDFLARE_ACCOUNT_ID=$(buildkite-agent secret get CLOUDFLARE_ACCOUNT_ID)
+  # - label: ":python: Get Worker Versions"
+  #   key: "get-versions"
+  #   # -n checks if something is nonempty
+  #   command: |
+  #     export WORKER_NAME=$(buildkite-agent meta-data get WORKER_NAME)
+  #     export CLOUDFLARE_API_TOKEN=$(buildkite-agent secret get CLOUDFLARE_API_TOKEN)
+  #     export CLOUDFLARE_ACCOUNT_ID=$(buildkite-agent secret get CLOUDFLARE_ACCOUNT_ID)
       
-      python3 -m scripts.get_versions
+  #     python3 -m scripts.get_versions
   
-  - label: ":lock_with_ink_pen: Canary Ramp"
-    # We skip this if there's no old versions, we need to pipeline upload to do this
-    key: "canary-ramp"
-    depends_on: "get-versions"
-    command: |
-      export WORKER_NAME=$(buildkite-agent meta-data get WORKER_NAME)
-      export CLOUDFLARE_API_TOKEN=$(buildkite-agent secret get CLOUDFLARE_API_TOKEN)
-      export CLOUDFLARE_ACCOUNT_ID=$(buildkite-agent secret get CLOUDFLARE_ACCOUNT_ID)
-      export OLD_VERSION_ID=$(buildkite-agent meta-data get "OLD_VERSION_ID" --default "")
-      export NEW_VERSION_ID=$(buildkite-agent meta-data get "NEW_VERSION_ID" --default "")
+  # - label: ":lock_with_ink_pen: Canary Ramp"
+  #   # We skip this if there's no old versions, we need to pipeline upload to do this
+  #   key: "canary-ramp"
+  #   depends_on: "get-versions"
+  #   command: |
+  #     export WORKER_NAME=$(buildkite-agent meta-data get WORKER_NAME)
+  #     export CLOUDFLARE_API_TOKEN=$(buildkite-agent secret get CLOUDFLARE_API_TOKEN)
+  #     export CLOUDFLARE_ACCOUNT_ID=$(buildkite-agent secret get CLOUDFLARE_ACCOUNT_ID)
+  #     export OLD_VERSION_ID=$(buildkite-agent meta-data get "OLD_VERSION_ID" --default "")
+  #     export NEW_VERSION_ID=$(buildkite-agent meta-data get "NEW_VERSION_ID" --default "")
 
-      if [ -z "$OLD_VERSION_ID" ] && [ -z "$NEW_VERSION_ID" ]; then 
-        cat <<- YAML | buildkite-agent pipeline upload
-        steps:
-          - label: ":python: Canary Ramp 1%"
-            command: |
-              export WORKER_NAME=$(buildkite-agent meta-data get WORKER_NAME)
-              export CLOUDFLARE_API_TOKEN=$(buildkite-agent secret get CLOUDFLARE_API_TOKEN)
-              export CLOUDFLARE_ACCOUNT_ID=$(buildkite-agent secret get CLOUDFLARE_ACCOUNT_ID)
-              export OLD_VERSION_ID=$(buildkite-agent meta-data get "OLD_VERSION_ID" --default "")
-              export NEW_VERSION_ID=$(buildkite-agent meta-data get "NEW_VERSION_ID" --default "")
-              python3 -m scripts.canary_ramp --ramp-percentage 1
-          - label: "Sleep for 10 minutes"
-            command: |
-              echo "Sleeping for 10 minutes..."
-              sleep 6
-              echo "Done sleeping."
-          - block: "Approval required before deployment"
-            blocked_state: "running"
-            fields:
-              - text: "Please approve to proceed with deployment."
-                key: "approval"
-                required: true
-                hint: "This is an approval step, you must approve to continue."
+  #     if [ -z "$OLD_VERSION_ID" ] && [ -z "$NEW_VERSION_ID" ]; then 
+  #       cat <<- YAML | buildkite-agent pipeline upload
+  #       steps:
+  #         - label: ":python: Canary Ramp 1%"
+  #           command: |
+  #             export WORKER_NAME=$(buildkite-agent meta-data get WORKER_NAME)
+  #             export CLOUDFLARE_API_TOKEN=$(buildkite-agent secret get CLOUDFLARE_API_TOKEN)
+  #             export CLOUDFLARE_ACCOUNT_ID=$(buildkite-agent secret get CLOUDFLARE_ACCOUNT_ID)
+  #             export OLD_VERSION_ID=$(buildkite-agent meta-data get "OLD_VERSION_ID" --default "")
+  #             export NEW_VERSION_ID=$(buildkite-agent meta-data get "NEW_VERSION_ID" --default "")
+  #             python3 -m scripts.canary_ramp --ramp-percentage 1
+  #         - label: "Sleep for 10 minutes"
+  #           command: |
+  #             echo "Sleeping for 10 minutes..."
+  #             sleep 6
+  #             echo "Done sleeping."
+  #         - block: "Approval required before deployment"
+  #           blocked_state: "running"
+  #           fields:
+  #             - text: "Please approve to proceed with deployment."
+  #               key: "approval"
+  #               required: true
+  #               hint: "This is an approval step, you must approve to continue."
 
-          - label: ":python: Canary Ramp 5%"
-            command: |
-              export WORKER_NAME=$(buildkite-agent meta-data get WORKER_NAME)
-              export CLOUDFLARE_API_TOKEN=$(buildkite-agent secret get CLOUDFLARE_API_TOKEN)
-              export CLOUDFLARE_ACCOUNT_ID=$(buildkite-agent secret get CLOUDFLARE_ACCOUNT_ID)
-              export OLD_VERSION_ID=$(buildkite-agent meta-data get "OLD_VERSION_ID" --default "")
-              export NEW_VERSION_ID=$(buildkite-agent meta-data get "NEW_VERSION_ID" --default "")
-              python3 -m scripts.canary_ramp --ramp-percentage 5
-          - label: "Sleep for 10 minutes"
-            command: |
-              echo "Sleeping for 10 minutes..."
-              sleep 6
-              echo "Done sleeping."
-          - block: "Approval required before deployment"
-            blocked_state: "running"
-            fields:
-              - text: "Please approve to proceed with deployment."
-                key: "approval"
-                required: true
-                hint: "This is an approval step, you must approve to continue."
+  #         - label: ":python: Canary Ramp 5%"
+  #           command: |
+  #             export WORKER_NAME=$(buildkite-agent meta-data get WORKER_NAME)
+  #             export CLOUDFLARE_API_TOKEN=$(buildkite-agent secret get CLOUDFLARE_API_TOKEN)
+  #             export CLOUDFLARE_ACCOUNT_ID=$(buildkite-agent secret get CLOUDFLARE_ACCOUNT_ID)
+  #             export OLD_VERSION_ID=$(buildkite-agent meta-data get "OLD_VERSION_ID" --default "")
+  #             export NEW_VERSION_ID=$(buildkite-agent meta-data get "NEW_VERSION_ID" --default "")
+  #             python3 -m scripts.canary_ramp --ramp-percentage 5
+  #         - label: "Sleep for 10 minutes"
+  #           command: |
+  #             echo "Sleeping for 10 minutes..."
+  #             sleep 6
+  #             echo "Done sleeping."
+  #         - block: "Approval required before deployment"
+  #           blocked_state: "running"
+  #           fields:
+  #             - text: "Please approve to proceed with deployment."
+  #               key: "approval"
+  #               required: true
+  #               hint: "This is an approval step, you must approve to continue."
             
-          - label: ":python: Canary Ramp 10%"
-            command: |
-              export WORKER_NAME=$(buildkite-agent meta-data get WORKER_NAME)
-              export CLOUDFLARE_API_TOKEN=$(buildkite-agent secret get CLOUDFLARE_API_TOKEN)
-              export CLOUDFLARE_ACCOUNT_ID=$(buildkite-agent secret get CLOUDFLARE_ACCOUNT_ID)
-              export OLD_VERSION_ID=$(buildkite-agent meta-data get "OLD_VERSION_ID" --default "")
-              export NEW_VERSION_ID=$(buildkite-agent meta-data get "NEW_VERSION_ID" --default "")
-              python3 -m scripts.canary_ramp --ramp-percentage 10
-          - label: "Sleep for 10 minutes"
-            command: |
-              echo "Sleeping for 10 minutes..."
-              sleep 6
-              echo "Done sleeping."
-          - block: "Approval required before deployment"
-            blocked_state: "running"
-            fields:
-              - text: "Please approve to proceed with deployment."
-                key: "approval"
-                required: true
-                hint: "This is an approval step, you must approve to continue."
+  #         - label: ":python: Canary Ramp 10%"
+  #           command: |
+  #             export WORKER_NAME=$(buildkite-agent meta-data get WORKER_NAME)
+  #             export CLOUDFLARE_API_TOKEN=$(buildkite-agent secret get CLOUDFLARE_API_TOKEN)
+  #             export CLOUDFLARE_ACCOUNT_ID=$(buildkite-agent secret get CLOUDFLARE_ACCOUNT_ID)
+  #             export OLD_VERSION_ID=$(buildkite-agent meta-data get "OLD_VERSION_ID" --default "")
+  #             export NEW_VERSION_ID=$(buildkite-agent meta-data get "NEW_VERSION_ID" --default "")
+  #             python3 -m scripts.canary_ramp --ramp-percentage 10
+  #         - label: "Sleep for 10 minutes"
+  #           command: |
+  #             echo "Sleeping for 10 minutes..."
+  #             sleep 6
+  #             echo "Done sleeping."
+  #         - block: "Approval required before deployment"
+  #           blocked_state: "running"
+  #           fields:
+  #             - text: "Please approve to proceed with deployment."
+  #               key: "approval"
+  #               required: true
+  #               hint: "This is an approval step, you must approve to continue."
 
-          - label: ":python: Canary Ramp 25%"
-            command: |
-              export WORKER_NAME=$(buildkite-agent meta-data get WORKER_NAME)
-              export CLOUDFLARE_API_TOKEN=$(buildkite-agent secret get CLOUDFLARE_API_TOKEN)
-              export CLOUDFLARE_ACCOUNT_ID=$(buildkite-agent secret get CLOUDFLARE_ACCOUNT_ID)
-              export OLD_VERSION_ID=$(buildkite-agent meta-data get "OLD_VERSION_ID" --default "")
-              export NEW_VERSION_ID=$(buildkite-agent meta-data get "NEW_VERSION_ID" --default "")
-              python3 -m scripts.canary_ramp --ramp-percentage 25
-          - label: "Sleep for 10 minutes"
-            command: |
-              echo "Sleeping for 10 minutes..."
-              sleep 6
-              echo "Done sleeping."
-          - block: "Approval required before deployment"
-            blocked_state: "running"
-            fields:
-              - text: "Please approve to proceed with deployment."
-                key: "approval"
-                required: true
-                hint: "This is an approval step, you must approve to continue."
+  #         - label: ":python: Canary Ramp 25%"
+  #           command: |
+  #             export WORKER_NAME=$(buildkite-agent meta-data get WORKER_NAME)
+  #             export CLOUDFLARE_API_TOKEN=$(buildkite-agent secret get CLOUDFLARE_API_TOKEN)
+  #             export CLOUDFLARE_ACCOUNT_ID=$(buildkite-agent secret get CLOUDFLARE_ACCOUNT_ID)
+  #             export OLD_VERSION_ID=$(buildkite-agent meta-data get "OLD_VERSION_ID" --default "")
+  #             export NEW_VERSION_ID=$(buildkite-agent meta-data get "NEW_VERSION_ID" --default "")
+  #             python3 -m scripts.canary_ramp --ramp-percentage 25
+  #         - label: "Sleep for 10 minutes"
+  #           command: |
+  #             echo "Sleeping for 10 minutes..."
+  #             sleep 6
+  #             echo "Done sleeping."
+  #         - block: "Approval required before deployment"
+  #           blocked_state: "running"
+  #           fields:
+  #             - text: "Please approve to proceed with deployment."
+  #               key: "approval"
+  #               required: true
+  #               hint: "This is an approval step, you must approve to continue."
 
-          - label: ":python: Canary Ramp 50%"
-            command: |
-              export WORKER_NAME=$(buildkite-agent meta-data get WORKER_NAME)
-              export CLOUDFLARE_API_TOKEN=$(buildkite-agent secret get CLOUDFLARE_API_TOKEN)
-              export CLOUDFLARE_ACCOUNT_ID=$(buildkite-agent secret get CLOUDFLARE_ACCOUNT_ID)
-              export OLD_VERSION_ID=$(buildkite-agent meta-data get "OLD_VERSION_ID" --default "")
-              export NEW_VERSION_ID=$(buildkite-agent meta-data get "NEW_VERSION_ID" --default "")
-              python3 -m scripts.canary_ramp --ramp-percentage 50
-          - label: "Sleep for 10 minutes"
-            command: |
-              echo "Sleeping for 10 minutes..."
-              sleep 6
-              echo "Done sleeping."
-          - block: "Approval required before deployment"
-            blocked_state: "running"
-            fields:
-              - text: "Please approve to proceed with deployment."
-                key: "approval"
-                required: true
-                hint: "This is an approval step, you must approve to continue."
+  #         - label: ":python: Canary Ramp 50%"
+  #           command: |
+  #             export WORKER_NAME=$(buildkite-agent meta-data get WORKER_NAME)
+  #             export CLOUDFLARE_API_TOKEN=$(buildkite-agent secret get CLOUDFLARE_API_TOKEN)
+  #             export CLOUDFLARE_ACCOUNT_ID=$(buildkite-agent secret get CLOUDFLARE_ACCOUNT_ID)
+  #             export OLD_VERSION_ID=$(buildkite-agent meta-data get "OLD_VERSION_ID" --default "")
+  #             export NEW_VERSION_ID=$(buildkite-agent meta-data get "NEW_VERSION_ID" --default "")
+  #             python3 -m scripts.canary_ramp --ramp-percentage 50
+  #         - label: "Sleep for 10 minutes"
+  #           command: |
+  #             echo "Sleeping for 10 minutes..."
+  #             sleep 6
+  #             echo "Done sleeping."
+  #         - block: "Approval required before deployment"
+  #           blocked_state: "running"
+  #           fields:
+  #             - text: "Please approve to proceed with deployment."
+  #               key: "approval"
+  #               required: true
+  #               hint: "This is an approval step, you must approve to continue."
 
-          - label: ":python: Canary Ramp 75%"
-            command: |
-              export WORKER_NAME=$(buildkite-agent meta-data get WORKER_NAME)
-              export CLOUDFLARE_API_TOKEN=$(buildkite-agent secret get CLOUDFLARE_API_TOKEN)
-              export CLOUDFLARE_ACCOUNT_ID=$(buildkite-agent secret get CLOUDFLARE_ACCOUNT_ID)
-              export OLD_VERSION_ID=$(buildkite-agent meta-data get "OLD_VERSION_ID" --default "")
-              export NEW_VERSION_ID=$(buildkite-agent meta-data get "NEW_VERSION_ID" --default "")
-              python3 -m scripts.canary_ramp --ramp-percentage 75
-          - label: "Sleep for 15 minutes"
-            command: |
-              echo "Sleeping for 15 minutes..."
-              sleep 9
-              echo "Done sleeping."
-          - block: "Approval required before deployment"
-            blocked_state: "running"
-            fields:
-              - text: "Please approve to proceed with deployment."
-                key: "approval"
-                required: true
-                hint: "This is an approval step, you must approve to continue."
+  #         - label: ":python: Canary Ramp 75%"
+  #           command: |
+  #             export WORKER_NAME=$(buildkite-agent meta-data get WORKER_NAME)
+  #             export CLOUDFLARE_API_TOKEN=$(buildkite-agent secret get CLOUDFLARE_API_TOKEN)
+  #             export CLOUDFLARE_ACCOUNT_ID=$(buildkite-agent secret get CLOUDFLARE_ACCOUNT_ID)
+  #             export OLD_VERSION_ID=$(buildkite-agent meta-data get "OLD_VERSION_ID" --default "")
+  #             export NEW_VERSION_ID=$(buildkite-agent meta-data get "NEW_VERSION_ID" --default "")
+  #             python3 -m scripts.canary_ramp --ramp-percentage 75
+  #         - label: "Sleep for 15 minutes"
+  #           command: |
+  #             echo "Sleeping for 15 minutes..."
+  #             sleep 9
+  #             echo "Done sleeping."
+  #         - block: "Approval required before deployment"
+  #           blocked_state: "running"
+  #           fields:
+  #             - text: "Please approve to proceed with deployment."
+  #               key: "approval"
+  #               required: true
+  #               hint: "This is an approval step, you must approve to continue."
 
-          - label: ":python: Canary Ramp 100%"
-            command: |
-              export WORKER_NAME=$(buildkite-agent meta-data get WORKER_NAME)
-              export CLOUDFLARE_API_TOKEN=$(buildkite-agent secret get CLOUDFLARE_API_TOKEN)
-              export CLOUDFLARE_ACCOUNT_ID=$(buildkite-agent secret get CLOUDFLARE_ACCOUNT_ID)
-              export OLD_VERSION_ID=$(buildkite-agent meta-data get "OLD_VERSION_ID" --default "")
-              export NEW_VERSION_ID=$(buildkite-agent meta-data get "NEW_VERSION_ID" --default "")
-              python3 -m scripts.canary_ramp --ramp-percentage 100
-      YAML
-      fi
+  #         - label: ":python: Canary Ramp 100%"
+  #           command: |
+  #             export WORKER_NAME=$(buildkite-agent meta-data get WORKER_NAME)
+  #             export CLOUDFLARE_API_TOKEN=$(buildkite-agent secret get CLOUDFLARE_API_TOKEN)
+  #             export CLOUDFLARE_ACCOUNT_ID=$(buildkite-agent secret get CLOUDFLARE_ACCOUNT_ID)
+  #             export OLD_VERSION_ID=$(buildkite-agent meta-data get "OLD_VERSION_ID" --default "")
+  #             export NEW_VERSION_ID=$(buildkite-agent meta-data get "NEW_VERSION_ID" --default "")
+  #             python3 -m scripts.canary_ramp --ramp-percentage 100
+  #     YAML
+  #     fi

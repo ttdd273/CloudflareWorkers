@@ -1,0 +1,30 @@
+FROM debian:bullseye
+
+WORKDIR /app
+
+COPY .. .
+
+RUN apt-get update && apt-get install -y \
+    python3 \
+    python3-pip
+
+# Expect build time variables 
+ARG WORKER_NAME
+ARG CLOUDFLARE_ACCOUNT_ID
+ARG CLOUDFLARE_API_KEY
+ARG OLD_VERSION_ID
+ARG NEW_VERSION_ID
+
+ENV WORKER_NAME=$WORKER_NAME
+ENV CLOUDFLARE_ACCOUNT_ID=$CLOUDFLARE_ACCOUNT_ID
+ENV CLOUDFLARE_API_KEY=$CLOUDFLARE_API_KEY
+ENV OLD_VERSION_ID=$OLD_VERSION_ID
+ENV NEW_VERSION_ID=$NEW_VERSION_ID
+
+# Install Node.js (LTS version)
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
+    apt-get install -y nodejs
+
+RUN pip install -r scripts/requirements.txt
+
+CMD ["python3", "-m", "scripts.get_versions"]

@@ -2,6 +2,10 @@ steps:
   - label: ":nodejs: Test All Workers (Main Branch)"
     command: |
       ./scripts/test_all.sh
+    plugins:
+    - docker-compose#v3.0.3:
+        run: worker-test
+        config: docker/docker-compose.test.yml
 
   # - wait: ~
 
