@@ -3,7 +3,7 @@ steps:
     command: |
       ./scripts/test_all.sh
     plugins:
-    - docker-compose#v3.0.3:
+    - docker-compose#v4.15.0:
         run: worker-test
         config: docker/docker-compose.test.yml
 

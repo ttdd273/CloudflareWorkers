@@ -10,15 +10,16 @@ steps:
 
   - label: "Worker Changes"
     command: |
-      export WORKER_NAME=$(buildkite-agent meta-data get WORKER_NAME)
-      export CLOUDFLARE_API_TOKEN=$(buildkite-agent secret get CLOUDFLARE_API_TOKEN)
-      export CLOUDFLARE_ACCOUNT_ID=$(buildkite-agent secret get CLOUDFLARE_ACCOUNT_ID)
       python3 -m scripts.show_diff
-    # plugins:
-    #   - docker-compose#v4.15.0: 
-    #     build: app
-    #     args:
-    #       - IMAGE_AUTHOR=${BUILDKITE_BUILD_AUTHOR}
+    plugins:
+      - docker-compose#v4.15.0: 
+        run: worker-deploy
+        config: docker/docker-compose.test.yml
+        args:
+          - WORKER_NAME=${buildkite-agent meta-data get WORKER_NAME}
+            CLOUDFLARE_API_TOKEN=$(buildkite-agent secret get CLOUDFLARE_API_TOKEN)
+            CLOUDFLARE_ACCOUNT_ID=$(buildkite-agent secret get CLOUDFLARE_ACCOUNT_ID)
+
 
   # - block: "Approval required before publishing"
   #   blocked_state: "running"
