@@ -14,7 +14,7 @@ steps:
     plugins:
     - docker-compose#v4.15.0:
         run: worker-deploy
-        config: docker/docker-compose.test.yml
+        config: docker/docker-compose.deploy.yml
         args:
           - WORKER_NAME=${buildkite-agent meta-data get WORKER_NAME}
             CLOUDFLARE_API_TOKEN=$(buildkite-agent secret get CLOUDFLARE_API_TOKEN)
