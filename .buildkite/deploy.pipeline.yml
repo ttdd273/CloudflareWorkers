@@ -45,7 +45,7 @@ steps:
   #     export CLOUDFLARE_API_TOKEN=$(buildkite-agent secret get CLOUDFLARE_API_TOKEN)
   #     export CLOUDFLARE_ACCOUNT_ID=$(buildkite-agent secret get CLOUDFLARE_ACCOUNT_ID)
       
-      python3 -m scripts.get_versions
+      # python3 -m scripts.get_versions
   
   # - label: ":lock_with_ink_pen: Canary Ramp"
   #   # We skip this if there's no old versions, we need to pipeline upload to do this
