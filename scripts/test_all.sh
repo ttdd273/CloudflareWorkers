@@ -9,4 +9,5 @@ for dir in $dirs; do
   cd "$dir"
   npm ci
   npm test -- --run
+  rm -rf node_modules
 done
